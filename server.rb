@@ -11,5 +11,6 @@ DataMapper.finalize
 DataMapper.auto_upgrade!
 
 get '/' do
-  'hello good world'
+  @links = Link.all
+  erb :index
 end
