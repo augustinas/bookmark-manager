@@ -1,6 +1,11 @@
 <body>
-  <% if session[:notice] %>
-    <div id="notice"><%= session[:notice] %></div>
+  <% if flash[:errors] && !flash[:errors].empty? %>
+    Sorry, there were the following problems with the form.
+    <ul id="errors">
+      <% flash[:errors].each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
   <% end %>
   <% if current_user %>
     Welcome, <%= current_user.email %>

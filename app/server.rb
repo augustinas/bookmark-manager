@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'rack-flash'
 require 'data_mapper'
 require_relative '../lib/link'
 require_relative '../lib/tag'
@@ -7,6 +8,7 @@ require_relative 'helpers/application'
 require_relative 'data_mapper_setup'
 
 enable :sessions
+use Rack::Flash
 set :session_secret, 'my weird ecryption string'
 
 get '/' do
@@ -43,7 +45,7 @@ post '/users' do
     session[:user_id] = @user.id
     redirect to('/')
   else
-    session[:notice] = 'Sorry, your passwords do not match'
+    flash.now[:errors] = @user.errors.full_messages
     erb :'users/new'
   end
 end
