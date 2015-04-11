@@ -1,8 +1,8 @@
 require 'sinatra'
 require 'data_mapper'
-require 'link'
-require 'tag'
-require 'user'
+require_relative '../lib/link'
+require_relative '../lib/tag'
+require_relative '../lib/user'
 require_relative 'helpers/application'
 require_relative 'data_mapper_setup'
 
@@ -31,13 +31,19 @@ get '/tags/:text' do
 end
 
 get '/users/new' do
+  @user = User.new
   erb :"users/new"
 end
 
 post '/users' do
-  user = User.create(email: params[:email],
-                     password: params[:password],
-                     password_confirmation: params[:password_confirmation])
-  session[:user_id] = user.id
-  redirect to('/')
+  @user = User.new(email: params[:email],
+                   password: params[:password],
+                   password_confirmation: params[:password_confirmation])
+  if @user.save
+    session[:user_id] = @user.id
+    redirect to('/')
+  else
+    session[:notice] = 'Sorry, your passwords do not match'
+    erb :'users/new'
+  end
 end

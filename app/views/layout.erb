@@ -1,4 +1,7 @@
 <body>
+  <% if session[:notice] %>
+    <div id="notice"><%= session[:notice] %></div>
+  <% end %>
   <% if current_user %>
     Welcome, <%= current_user.email %>
   <% end %>
