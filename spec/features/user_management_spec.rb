@@ -12,7 +12,7 @@ feature 'User signs up' do
       sign_up('a@a.com', 'pass', 'wrong')
     end.to change(User, :count).by(0)
     expect(current_path).to eq('/users')
-    expect(page).to have_content('Password does not match the confirmation')
+    expect(page).to have_content('Sorry, your passwords do not match')
   end
 
   scenario 'with an email that is already registered' do
@@ -30,5 +30,34 @@ feature 'User signs up' do
     fill_in(:password, with: password)
     fill_in(:password_confirmation, with: password_confirmation)
     click_button('Sign up')
+  end
+end
+
+feature 'User signs in' do
+  before(:each) do
+    User.create(email: 'test@test.com',
+                password: 'test',
+                password_confirmation: 'test')
+  end
+
+  scenario 'with correct credentials' do
+    visit '/'
+    expect(page).not_to have_content('Welcome, test@test.com')
+    sign_in('test@test.com', 'test')
+    expect(page).to have_content('Welcome, test@test.com')
+  end
+
+  scenario 'with incorrect credentials' do
+    visit '/'
+    expect(page).not_to have_content('Welcome, test@test.com')
+    sign_in('test@test.com', 'wrong')
+    expect(page).not_to have_content('Welcome, test@test.com')
+  end
+
+  def sign_in(email, password)
+    visit '/sessions/new'
+    fill_in 'email', with: email
+    fill_in 'password', with: password
+    click_button 'Sign in'
   end
 end
