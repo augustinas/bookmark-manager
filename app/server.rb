@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'rack-flash'
 require 'data_mapper'
+require 'sinatra/partial'
 
 require_relative 'models/link'
 require_relative 'models/tag'
